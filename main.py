@@ -55,6 +55,7 @@ def on_closing(): #Prevents python from crashing
 def UI(): #Main UI function
     root = tk.Tk()
     root.title("Noita Save Manager")
+    root.iconbitmap('icon.ico')
     ### Dynamically Changes the radiobutton name based on if the save slot is filled
     # def Check_Save():
     #     if config['SAVED_GAMES']['save1'] == 'False': save_button_1['text'] = 'Empty Slot'
@@ -119,6 +120,8 @@ if __name__ == "__main__": #file setup
 
     if os.path.exists(config['BASE']['NOITA_PATH']) == False or os.path.exists(config['BASE']['NOITA_SAVE_PATH']) == False:
         root = tk.Tk()
+        root.title("Noita Save Manager")
+        root.iconbitmap('icon.ico')
         canvas1 = tk.Canvas(root, width = 200, height = 200)
         Game_Path_Button = tk.Button(root, text='Select Noita Path', command=Set_game_path)
         Game_Save_Path_Button = tk.Button(root, text='Select Noita Save Path', command=Set_game_save_path)
