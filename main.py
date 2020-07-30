@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter.filedialog import askdirectory
-from tkinter.filedialog import askopenfile
+from tkinter.filedialog import askopenfilename
 
 import configparser
 import os
@@ -11,7 +11,7 @@ import subprocess
 
 
 def Set_game_path(): #Sets noita's game file
-    filename = askopenfile()
+    filename = askopenfilename()
     config.set('BASE', 'noita_path', filename)
     with open("config.ini", "w+") as configfile:
         config.write(configfile)
@@ -130,7 +130,7 @@ if __name__ == "__main__": #file setup
         canvas1.pack()
         root.protocol("WM_DELETE_WINDOW", on_closing)
         def check_path(): 
-            if (os.path.exists(config['BASE']['NOITA_PATH']) == False or os.path.exists(config['BASE']['NOITA_SAVE_PATH']) == False):
+            if (os.path.isfile(config['BASE']['NOITA_PATH']) == False or os.path.exists(config['BASE']['NOITA_SAVE_PATH']) == False):
                 root.after(500, check_path)
             else: root.destroy()  
         root.after(500, check_path)
