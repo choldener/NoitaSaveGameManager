@@ -9,14 +9,14 @@ import sys
 import shutil
 import subprocess
 
-
-def Set_game_path(): #Sets noita's game file
-    filename = askopenfilename()
-    config.set('BASE', 'noita_path', filename)
-    with open("config.ini", "w+") as configfile:
-        config.write(configfile)
-    Game_Path_Button.destroy()
-    return()
+## Used for launching the game, not working due to windows bug
+# def Set_game_path(): #Sets noita's game file
+#     filename = askopenfilename()
+#     config.set('BASE', 'noita_path', filename)
+#     with open("config.ini", "w+") as configfile:
+#         config.write(configfile)
+#     Game_Path_Button.destroy()
+#     return()
     
 def Set_game_save_path(): #Sets noita's save file i.e. save00
     filename = askdirectory()
@@ -31,8 +31,13 @@ def Save_Game(): #Save button function
     if MsgBox == 'yes':
         try: shutil.rmtree(str(config['BASE']['SAVE_GAME_PATH'])+'\\'+ str(save_selection.get()) + '\\save00')
         except: return()
-        finally: shutil.copytree(config['BASE']['noita_save_path'], 
+        finally: 
+            shutil.copytree(config['BASE']['noita_save_path'], 
                     str(config['BASE']['SAVE_GAME_PATH'])+'\\'+ str(save_selection.get()) + '\\save00')
+            ##Dynamic button changer feature
+            # config.set('SAVED_GAMES', 'save'+str(save_selection.get()), 'Filled')
+            # with open("config.ini", "w+") as configfile:
+            #     config.write(configfile)
         return()
     else:
         return()
@@ -56,14 +61,19 @@ def UI(): #Main UI function
     root = tk.Tk()
     root.title("Noita Save Manager")
     root.iconbitmap('icon.ico')
-    ### Dynamically Changes the radiobutton name based on if the save slot is filled
+    ## Dynamically Changes the radiobutton name based on if the save slot is filled
+    ## Not really needed tbh, perhaps reconfigure into displaying save dates
     # def Check_Save():
     #     if config['SAVED_GAMES']['save1'] == 'False': save_button_1['text'] = 'Empty Slot'
-    #     if config['SAVED_GAMES']['save2'] == 'False': savegame_2 = 'Empty Slot'
-    #     if config['SAVED_GAMES']['save3'] == 'False': savegame_3 = 'Empty Slot'
+    #     if config['SAVED_GAMES']['save2'] == 'False': save_button_2['text'] = 'Empty Slot'
+    #     if config['SAVED_GAMES']['save3'] == 'False': save_button_3['text'] = 'Empty Slot'
+    #     else:
+    #         save_button_1['text'] = 'Slot 1'
+    #         save_button_2['text'] = 'Slot 2'
+    #         save_button_3['text'] = 'Slot 3'
     #     root.after(500, Check_Save)
-    #root.after(500, Check_Save)
-    ###
+    # root.after(500, Check_Save)
+    ##
     global save_selection
     save_selection = tk.IntVar()
     save_selection.set(1)
@@ -76,21 +86,24 @@ def UI(): #Main UI function
                     width = 20,
                     padx = 20, 
                     variable=save_selection, 
-                    value=1).pack(anchor=tk.W)
+                    value=1)
+    save_button_1.pack(anchor=tk.W)
     save_button_2 = tk.Radiobutton(root, 
                     text= 'Slot 2',
                     indicatoron = 0,
                     width = 20,
                     padx = 20, 
                     variable=save_selection, 
-                    value=2).pack(anchor=tk.W)
+                    value=2)
+    save_button_2.pack(anchor=tk.W)
     save_button_3 = tk.Radiobutton(root, 
                     text= 'Slot 3',
                     indicatoron = 0,
                     width = 20,
                     padx = 20, 
                     variable=save_selection, 
-                    value=3).pack(anchor=tk.W)
+                    value=3)
+    save_button_3.pack(anchor=tk.W)
     
     Save_Button = tk.Button(root, text='Save Game', command=Save_Game)
     Load_Button = tk.Button(root, text='Load Game', command=Load_Game)
@@ -117,16 +130,15 @@ if __name__ == "__main__": #file setup
         config.set('BASE', 'SAVE_GAME_PATH', str(os.getcwd()) +'\Saved_Games')   
         with open("config.ini", "w+") as configfile:
             config.write(configfile)
-
-    if os.path.exists(config['BASE']['NOITA_PATH']) == False or os.path.exists(config['BASE']['NOITA_SAVE_PATH']) == False:
+    if os.path.exists(config['BASE']['NOITA_SAVE_PATH']) == False: #or os.path.exists(config['BASE']['NOITA_PATH']) == False:
         root = tk.Tk()
         root.title("Noita Save Manager")
         root.iconbitmap('icon.ico')
         canvas1 = tk.Canvas(root, width = 200, height = 200)
-        Game_Path_Button = tk.Button(root, text='Select Noita Path', command=Set_game_path)
+        #Game_Path_Button = tk.Button(root, text='Select Noita Path', command=Set_game_path)
         Game_Save_Path_Button = tk.Button(root, text='Select Noita Save Path', command=Set_game_save_path)
-        canvas1.create_window(100, 40, window=Game_Path_Button)
-        canvas1.create_window(100, 75, window=Game_Save_Path_Button)
+        #canvas1.create_window(100, 40, window=Game_Path_Button)
+        canvas1.create_window(100, 50, window=Game_Save_Path_Button)
         canvas1.pack()
         root.protocol("WM_DELETE_WINDOW", on_closing)
         def check_path(): 
