@@ -25,7 +25,7 @@ def Set_game_save_path():  # Sets noita's save file i.e. save00
     with open("config.ini", "w+") as configfile:
         config.write(configfile)
     Game_Save_Path_Button.destroy()
-    return ()
+    return
 
 
 def Save_Game():  # Save button function
@@ -34,7 +34,7 @@ def Save_Game():  # Save button function
         try:
             shutil.rmtree(str(config['BASE']['SAVE_GAME_PATH']) + '\\' + str(save_selection.get()) + '\\save00')
         except:
-            return ()
+            return
         finally:
             shutil.copytree(config['BASE']['noita_save_path'],
                             str(config['BASE']['SAVE_GAME_PATH']) + '\\' + str(save_selection.get()) + '\\save00')
@@ -42,25 +42,29 @@ def Save_Game():  # Save button function
             # config.set('SAVED_GAMES', 'save'+str(save_selection.get()), 'Filled')
             # with open("config.ini", "w+") as configfile:
             #     config.write(configfile)
-        return ()
+        return
     else:
-        return ()
+        return
 
 
 def Load_Game():  # Load button function
-    try:
-        shutil.rmtree(config['BASE']['noita_save_path'])
-    except:
-        return ()
-    finally:
-        shutil.copytree(str(config['BASE']['SAVE_GAME_PATH']) + '\\' + str(save_selection.get()) + '\\save00',
-                        config['BASE']['noita_save_path'])
-    # subprocess.call(config['BASE']['NOITA_PATH']) #Bugged
-    return ()
+    MsgBox = tk.messagebox.askquestion('Overwrite Game', 'Are you sure you want to overwrite your current game?', icon='warning')
+    if MsgBox == 'yes':
+        try:
+            shutil.rmtree(config['BASE']['noita_save_path'])
+        except:
+            return
+        finally:
+            shutil.copytree(str(config['BASE']['SAVE_GAME_PATH']) + '\\' + str(save_selection.get()) + '\\save00',
+                            config['BASE']['noita_save_path'])
+        # subprocess.call(config['BASE']['NOITA_PATH']) #Bugged
+        return
+    else:
+        return
 
 
 def Do_Nothing():  # Testing Function
-    return ()
+    return
 
 
 def on_closing():  # Prevents python from crashing
